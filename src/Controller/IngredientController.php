@@ -66,7 +66,13 @@ class IngredientController extends AbstractController
         ]);
     }
 
-
+    /**
+     * @param IngredientRepository $repository
+     * @param int $id
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/ingredient/edition/{id}', name: 'ingredient.edit', methods: ['GET', 'POST'])]
     public function edit(IngredientRepository $repository, int $id, Request $request, EntityManagerInterface $manager): Response
     {
@@ -93,6 +99,11 @@ class IngredientController extends AbstractController
         ]);
     }
 
+    /**
+     * @param EntityManagerInterface $manager
+     * @param int $id
+     * @return Response
+     */
     #[Route('/ingredient/suppression/{id}', name: 'ingredient.delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $manager, int $id): Response
     {
