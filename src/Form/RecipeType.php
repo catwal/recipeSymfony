@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class RecipeType extends AbstractType
+class   RecipeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -27,8 +27,8 @@ class RecipeType extends AbstractType
             ->add('name', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'minlength' => '2',
-                    'maxlength' => '50'
+                    'minlenght' => '2',
+                    'maxlenght' => '50'
                 ],
                 'label' => 'Nom',
                 'label_attr' => [
