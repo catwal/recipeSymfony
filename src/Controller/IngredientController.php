@@ -11,9 +11,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Security\Core\Security;
+
 
 class IngredientController extends AbstractController
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     /**
      * @param IngredientRepository $ingredientRepository
      * @param PaginatorInterface $paginator
@@ -23,9 +34,12 @@ class IngredientController extends AbstractController
     #[Route('/ingredient', name: 'ingredient', methods: ['GET'])]
     public function index(IngredientRepository $ingredientRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
 
         $ingredients = $paginator->paginate(
-            $ingredientRepository->findAll(), /* query NOT result */
+            $ingredientRepository->findBy(['user' => $this->getUser()]), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
@@ -43,12 +57,17 @@ class IngredientController extends AbstractController
     #[Route('/ingredient/nouveau', name: 'ingredient.new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
+
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
 
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $ingredient = $form->getData();
+            $ingredient->setUser($this->getUser());
 
             $manager->persist($ingredient);
             $manager->flush();
@@ -77,6 +96,15 @@ class IngredientController extends AbstractController
     public function edit(IngredientRepository $repository, int $id, Request $request, EntityManagerInterface $manager): Response
     {
         $ingredient = $repository->findOneBy(["id" => $id]);
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
+
+        $userTest = $this->getUser();
+        if($this->security->isGranted('user === userTest')){
+            return $this->redirectToRoute('security.login');
+        }
+
         $form = $this->createForm(IngredientType::class, $ingredient);
 
         $form->handleRequest($request);

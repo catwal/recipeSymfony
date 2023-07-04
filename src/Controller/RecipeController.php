@@ -10,6 +10,7 @@ use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,8 +26,11 @@ class RecipeController extends AbstractController
     #[Route('/recette', name: 'recipe.index', methods: ['GET'])]
     public function index(RecipeRepository $recetteRepository, PaginatorInterface $paginator, request $request): Response
     {
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
         $recipes = $paginator->paginate(
-            $recetteRepository->findAll(), /* query NOT result */
+            $recetteRepository->findBy(['user' => $this->getUser()]), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
@@ -44,12 +48,17 @@ class RecipeController extends AbstractController
     #[Route('/recette/creation', name: 'recipe.new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $manager):Response
     {
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
+
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $recipe = $form->getData();
+            $recipe->setUser($this->getUser());
 
             $manager->persist($recipe);
             $manager->flush();
@@ -78,6 +87,9 @@ class RecipeController extends AbstractController
     #[Route('/recette/edition/{id}', name: 'recipe.edit', methods: ['GET', 'POST'])]
     public function edit(RecipeRepository $repository, int $id, Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted(new Expression(
+            '"ROLE_USER" in role_names'
+        ));
         $recipe = $repository->findOneBy(["id" => $id]);
         $form = $this->createForm(RecipeType::class, $recipe);
 
