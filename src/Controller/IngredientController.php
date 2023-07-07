@@ -54,7 +54,7 @@ class IngredientController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route('/ingredient/nouveau', name: 'ingredient.new', methods: ['GET', 'POST'])]
+    #[Route('/ingredient/creation', name: 'ingredient.new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $manager): Response
     {
         $this->denyAccessUnlessGranted(new Expression(
@@ -100,8 +100,9 @@ class IngredientController extends AbstractController
             '"ROLE_USER" in role_names'
         ));
 
-        $userTest = $this->getUser();
-        if($this->security->isGranted('user === userTest')){
+        $user= $this->getUser();
+        $userIngredient = $ingredient->getUser();
+        if($user !== $userIngredient){
             return $this->redirectToRoute('security.login');
         }
 
@@ -136,12 +137,18 @@ class IngredientController extends AbstractController
     public function delete(EntityManagerInterface $manager, int $id): Response
     {
         $ingredient = $manager->getRepository(Ingredient::class)->findOneBy(['id'=>$id]);
-        $manager->remove($ingredient);
-        $manager->flush();
-        $this->addFlash(
-            'success',
-            'Votre ingrédient à bien été supprimé !'
-        );
+        $user = $this->getUser();
+        $userIngredient = $ingredient->getUser();
+        if($user === $userIngredient){
+            dd($user);
+            $manager->remove($ingredient);
+            $manager->flush();
+            $this->addFlash(
+                'success',
+                'Votre ingrédient à bien été supprimé !'
+            );
+        }
+
 
         return $this->redirectToRoute('ingredient');
     }

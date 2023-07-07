@@ -9,7 +9,8 @@
 
         <h1 class="mt-4">Modification de la recette</h1>
 
-        {{ form_start(form) }}
+        <form name="recipe" method="post" enctype="multipart/form-data">
+
         <div class="form-error">
             {{ form_errors(form) }}
         </div>
@@ -76,15 +77,13 @@
                 {{ form_errors(form.imageFile) }}
             </div>
         </div>
+            {{ form_row(form.ingredients) }}
 
+            {{ form_row(form._token) }}
 
-        {{ form_row(form.ingredients) }}
-
-        <div class="form-group">
-            {{ form_row(form.submit) }}
-        </div>
-
-        {{ form_end(form) }}
-
+            <button type="submit" id="recipe_submit" name="recipe[submit]" class="btn btn-primary mt-4">
+               Modifier ma recette
+            </button>
+        </form>
     </div>
 {% endblock %}
