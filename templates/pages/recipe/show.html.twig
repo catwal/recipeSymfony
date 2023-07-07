@@ -12,6 +12,9 @@
             </div>
         {% endfor %}
         <h1 class="mt-4">{{ recipe.name }}</h1>
+        <div class="recipe_image">
+            <img style="max-width: 500px" src="{{ vich_uploader_asset(recipe, 'imageFile') }}" alt="">
+        </div>
         <p class="mt-4">La moyenne de cette recette est de {{ recipe.average | number_format(2, '.', ',') }}/5 </p>
         <span class="badge bg-primary">Crée le {{ recipe.createdAt | date('d/m/Y') }}</span>
         <p class="mt-4">Temps (en minutes) : {{ recipe.time is same as(null) ? 'non renseigné' :  recipe.time }}</p>

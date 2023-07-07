@@ -59,7 +59,14 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
+    /**
+     * @param int $id
+     * @param RecipeRepository $recipeRepository
+     * @param Request $request
+     * @param MarkRepository $markRepository
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/recette/{id}', name: 'recipe.show', methods: ['GET', 'POST'])]
     public function show(
         int $id,
@@ -77,7 +84,8 @@ class RecipeController extends AbstractController
             '"ROLE_USER" in role_names'
         ));
 
-        if(!$recipe->isIsPublic()){
+
+        if($recipe === null || !$recipe->isIsPublic()){
             return $this->redirectToRoute('security.login');
         }
 
