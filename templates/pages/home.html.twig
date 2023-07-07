@@ -7,6 +7,11 @@
      <div class="container mt-4">
          <div class="jumbotron">
              <h1 class="display-4">Bienvenue sur SymRecipe</h1>
+             {% for message in app.flashes('success') %}
+                 <div class="alert alert-success mt-4">
+                     {{ message }}
+                 </div>
+             {% endfor %}
              <p class="lead">
                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In malesuada suscipit est. Nulla semper pharetra volutpat.
                  Donec consectetur gravida hendrerit. Aliquam erat volutpat. Cras sed consequat enim. Quisque fermentum lectus sit amet quam
