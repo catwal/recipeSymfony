@@ -15,10 +15,29 @@
                  tellus dolor malesuada lacus, a dapibus augue dui et nulla. Vestibulum convallis euismod nisl non sollicitudin.
              </p>
              <hr class="my-4">
-             <p>Pour commencer rdv sur la page d'inscription</p>
-             <p class="lead">
-                 <a class="btn btn-primary btn-lg" href="{{ path('security.registration') }}" role="button">Inscription</a>
-             </p>
+             {% if app.user is same as(null)%}
+                 <p>Pour commencer rdv sur la page d'inscription</p>
+                 <p class="lead">
+                     <a class="btn btn-primary btn-lg" href="{{ path('security.registration') }}" role="button">Inscription</a>
+                 </p>
+             {% endif %}
+         </div>
+
+         <div class="recipes">
+             <h2 class="mt-4">Recette de la communauté</h2>
+             <div class="d-flex justify-content-between">
+                 {% for recipe in recipes %}
+                     <div class="card border-primary mb-3" style="max-width: 20rem;">
+                         <div class="card-header">Recette n° {{ recipe.id }}</div>
+                         <div class="card-body">
+                             <h4 class="card-title">{{ recipe.name }}</h4>
+                             <p class="card-text">
+                                 {{ recipe.description | slice(0, 100) ~ '...' }}
+                             </p>
+                         </div>
+                     </div>
+                 {% endfor %}
+             </div>
          </div>
      </div>
  {% endblock %}

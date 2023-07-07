@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ recipe.name }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <h1 class="mt-4">{{ recipe.name }}</h1>
+        <p class="mt-4">La moyenne de cette recette est de {{ recipe.average | number_format(2, '.', ',') }}/5 </p>
+        <span class="badge bg-primary">Crée le {{ recipe.createdAt | date('d/m/Y') }}</span>
+        <p class="mt-4">Temps (en minutes) : {{ recipe.time is same as(null) ? 'non renseigné' :  recipe.time }}</p>
+        {% if recipe.nbPeople %}
+        <p class="mt-4">Pour {{ recipe.nbPeople }} personnes</p>
+        {% endif %}
+        <p class="mt-4">Difficulté {{ recipe.difficulty is same as (null) ? 'non renseigné' : recipe.difficulty}}/5</p>
+        <p class="mt-4">Prix (en euros) : {{ recipe.price is same as (null) ? 'non renseigné' : recipe.price}}</p>
+        <div class="mt-4">
+            {{ recipe.description | raw }}
+        </div>
+
+        <p class="mt-4">Ingredients:</p>
+        {% for ingredient in recipe.ingredients %}
+            <span class="badge bg-primary">{{ ingredient.name }}</span>
+        {% endfor %}
+
+        <div class="mark">
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}
