@@ -11,6 +11,8 @@
         "doctrine/doctrine-bundle": "^2.9",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.15",
+        "easycorp/easyadmin-bundle": "^4.7",
+        "friendsofsymfony/ckeditor-bundle": "^2.4",
         "karser/karser-recaptcha3-bundle": "^0.1.24",
         "knplabs/knp-paginator-bundle": "^5.1",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -87,7 +89,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "ckeditor:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
