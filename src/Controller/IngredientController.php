@@ -140,7 +140,6 @@ class IngredientController extends AbstractController
         $user = $this->getUser();
         $userIngredient = $ingredient->getUser();
         if($user === $userIngredient){
-            dd($user);
             $manager->remove($ingredient);
             $manager->flush();
             $this->addFlash(
